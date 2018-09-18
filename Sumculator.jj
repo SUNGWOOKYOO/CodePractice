@@ -1,0 +1,131 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = true;
+  IGNORE_CASE = true;
+}
+
+PARSER_BEGIN(Sumculator)
+
+public class Sumculator
+{
+  public static void main(String args []) throws ParseException
+  {
+    
+    Sumculator parser = new Sumculator(System.in);
+    while (true)
+    {
+      System.out.println("Reading from standard input...");
+      try
+      {
+        switch (Sumculator.one_line())
+        {
+          case 0 : 
+          break;
+          case 1 : 
+          System.out.println("Goodbye.");
+          System.exit(0);
+          default : 
+          break;
+        }
+      }
+      catch (Exception e)
+      {
+        System.out.println("NOK.");
+        System.out.println(e.getMessage());
+        Sumculator.ReInit(System.in);
+      }
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+        break;
+      }
+    }
+  }
+}
+
+PARSER_END(Sumculator)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < PLUS : "+" >
+| < MINUS : "-" >
+| < EQUALS : "=" >
+}
+
+TOKEN :
+{
+  < INT_VALUE : (< DIGIT >)+ >
+| < DIGIT : [ "0"-"9" ] >
+}
+
+int one_line() :
+{
+  int output;
+}
+{
+  output = sum() < EQUALS >
+  {
+    System.out.println(output);
+    return 0;
+  }
+| ";"
+  {
+    return 1;
+  }
+}
+
+int sum() :
+{
+  int output;
+  int interm;
+  float sign;
+}
+{
+  output = element()
+  (
+    (
+      < PLUS >
+      {
+        sign = 1;
+      }
+    | < MINUS >
+      {
+        sign = -1;
+      } 
+    )
+    interm = element()
+    {
+      output += sign*interm;
+    }
+  )*
+  {
+    return output;
+  }
+}
+
+
+int element() :
+{
+  Token t;
+  int f;
+}
+{
+  t = < INT_VALUE >
+  {
+    f =  Integer.parseInt(t.toString());
+    return f;
+  }
+
+}
